@@ -102,3 +102,5 @@ const createAdv = (i, location) => ({
 });
 
 const similarAds = Array.from({length: SIMILAR_ADS_COUNT}, (_, i) => createAdv(i, createLocation()));
+
+similarAds();
