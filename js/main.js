@@ -62,7 +62,7 @@ const zeroPad = (num, places) => String(num).padStart(places, '0');
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const getNoRepeatArray = (sourceArray) => {
+const getArrayWithRandomElements = (sourceArray) => {
   const noRepeatArray = [];
   sourceArray.forEach((element) => {
     if (getRandomInteger(0, 1)) {
@@ -85,9 +85,9 @@ const createOffer = (location) => ({
   guests: getRandomInteger(1, 10),
   checkin: getRandomArrayElement(TIME_OPTIONS),
   checkout: getRandomArrayElement(TIME_OPTIONS),
-  features: getNoRepeatArray(CHARACTERISTICS),
+  features: getArrayWithRandomElements (CHARACTERISTICS),
   description: 'Здесь будет описание объекта',
-  photos: getNoRepeatArray(PHOTOS),
+  photos: getArrayWithRandomElements (PHOTOS),
 });
 
 const createLocation = () => ({
