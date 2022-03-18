@@ -53,7 +53,7 @@ const createOffer = (location) => ({
   checkout: getRandomArrayElement(TIME_OPTIONS),
   features: getArrayWithRandomElements (CHARACTERISTICS),
   description: 'Здесь будет описание объекта',
-  photos: getArrayWithRandomElements (PHOTOS),
+  photos: getArrayWithRandomElements(PHOTOS),
 });
 
 const createLocation = () => ({
