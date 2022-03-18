@@ -28,7 +28,7 @@ const getFeatures = (element, features) => {
 
 const getPhotos = (element, hrefPhotos) => {
   const photosList = element.querySelector('.popup__photos');
-  photosList.innerHTML = '';
+  photosList.querySelector('img').remove();
 
   hrefPhotos.forEach((hrefPhoto) => {
     const newPhoto = document.createElement('img');
