@@ -1,7 +1,7 @@
 import {similarAds } from './data.js';
 
 const similarElementsTemplate = document.querySelector('#card').content.querySelector('.popup');
-const mapPlace = document.querySelector('#map-canvas');
+//const mapPlace = document.querySelector('#map-canvas');
 const similarElements = similarAds();
 const similarListFragment = document.createDocumentFragment();
 
@@ -57,6 +57,6 @@ similarElements.forEach(({offer}) => {
   similarListFragment.append(offerElement);
 });
 
-mapPlace.append(similarListFragment.childNodes[0]);
+//mapPlace.append(similarListFragment.childNodes[0]);
 
 
