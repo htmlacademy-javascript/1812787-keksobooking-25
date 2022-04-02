@@ -1,9 +1,4 @@
-import {similarAds } from './data.js';
-
 const similarElementsTemplate = document.querySelector('#card').content.querySelector('.popup');
-const mapPlace = document.querySelector('#map-canvas');
-const similarElements = similarAds();
-const similarListFragment = document.createDocumentFragment();
 
 const objectTypes = {
   flat: 'Квартира',
@@ -42,9 +37,8 @@ const getPhotos = (element, hrefPhotos) => {
   });
 };
 
-similarElements.forEach(({offer}) => {
+const createPopupElement = ({offer}) => {
   const offerElement = similarElementsTemplate.cloneNode(true);
-
   offerElement.querySelector('.popup__title').textContent = offer.title;
   offerElement.querySelector('.popup__text--address').textContent = offer.address;
   offerElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
@@ -54,9 +48,7 @@ similarElements.forEach(({offer}) => {
   getFeatures(offerElement, offer.features);
   offerElement.querySelector('.popup__description').textContent = offer.description;
   getPhotos(offerElement, offer.photos);
-  similarListFragment.append(offerElement);
-});
+  return offerElement;
+};
 
-mapPlace.append(similarListFragment.childNodes[0]);
-
-
+export {createPopupElement};
