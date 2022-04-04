@@ -5,8 +5,8 @@ const pristine = new Pristine(form, {
   errorClass: 'ad-form__item--invalid',
   //successClass: 'ad-form__item--valid',
   errorTextParent: 'ad-form__element',
-//errorTextTag: 'span',
-// errorTextClass: 'ad-form__error-text',
+  //errorTextTag: 'span',
+  errorTextClass: 'ad-form__error-text',
 });
 
 const roomField = form.querySelector('[name="rooms"]');
