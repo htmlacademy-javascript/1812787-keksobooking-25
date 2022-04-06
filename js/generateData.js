@@ -37,17 +37,30 @@ const getPhotos = (element, hrefPhotos) => {
   });
 };
 
-const createPopupElement = ({offer}) => {
+const createPopupElement = ({author, offer}) => {
   const offerElement = similarElementsTemplate.cloneNode(true);
+  offerElement.querySelector('.popup__avatar').src = author.avatar;
   offerElement.querySelector('.popup__title').textContent = offer.title;
   offerElement.querySelector('.popup__text--address').textContent = offer.address;
   offerElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
   offerElement.querySelector('.popup__type').textContent = objectTypes[offer.type];
   offerElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   offerElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
-  getFeatures(offerElement, offer.features);
-  offerElement.querySelector('.popup__description').textContent = offer.description;
-  getPhotos(offerElement, offer.photos);
+  if ('features' in offer) {
+    getFeatures(offerElement, offer.features);
+  } else {
+    offerElement.querySelector('.popup__features').classList.toggle('hidden');
+  }
+  if ('description' in offer) {
+    offerElement.querySelector('.popup__description').textContent = offer.description;
+  } else {
+    offerElement.querySelector('.popup__description').classList.toggle('hidden');
+  }
+  if ('photos' in offer) {
+    getPhotos(offerElement, offer.photos);
+  } else {
+    offerElement.querySelector('.popup__photos').classList.toggle('hidden');
+  }
   return offerElement;
 };
 

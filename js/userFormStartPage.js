@@ -1,7 +1,6 @@
 import {createPopupElement} from './generateData.js';
-import {similarAds} from './data.js';
+import {pristine} from './userForm.js';
 
-const similarElements = similarAds();
 const form = document.querySelector('.ad-form');
 const filterForm = document.querySelector('.map__filters');
 const allElements = form.querySelectorAll('fieldset');
@@ -14,6 +13,7 @@ const defaultCoordinates = {
   lat: 35.65283,
   lng: 139.83948,
 };
+const defaultPriceValue = priceValue.getAttribute('placeholder');
 
 const map = L.map('map-canvas').setView({
   lat: defaultCoordinates.lat,
@@ -76,8 +76,6 @@ const createMarker = (adv) => {
     .bindPopup(createPopupElement(adv));
 };
 
-similarElements.forEach((point) => createMarker(point));
-
 const mainMarker = L.marker(
   {
     lat: defaultCoordinates.lat,
@@ -91,16 +89,22 @@ const mainMarker = L.marker(
 
 mainMarker.addTo(map);
 
+const setMainMarker = () => {
+  mainMarker.setLatLng ({
+    lat: defaultCoordinates.lat,
+    lng: defaultCoordinates.lng,
+  });
+  addressField.value = `${defaultCoordinates.lat.toFixed(5)}, ${defaultCoordinates.lng.toFixed(5)}`;
+};
+
 mainMarker.on('moveend', (evt) => {
   const markerCoordinates = evt.target.getLatLng();
   addressField.value = `${markerCoordinates.lat.toFixed(5)}, ${markerCoordinates.lng.toFixed(5)}`;
 });
 
-//priceValue.value = 20000;
-
 noUiSlider.create(sliderElement, {
   range: {
-    min: 0,
+    min: 1000,
     max: 100000,
   },
   start: 5000,
@@ -118,8 +122,15 @@ noUiSlider.create(sliderElement, {
 
 sliderElement.noUiSlider.on('slide', () => {
   priceValue.value = sliderElement.noUiSlider.get();
+  pristine.validate();
 });
 
 priceValue.addEventListener('input', () => {
   sliderElement.noUiSlider.set(priceValue.value);
 });
+
+const setDefaultNoUiSlider = () => {
+  sliderElement.noUiSlider.set(defaultPriceValue);
+};
+
+export {createMarker, setMainMarker, setDefaultNoUiSlider};
