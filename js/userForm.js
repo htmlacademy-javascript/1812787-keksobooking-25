@@ -116,32 +116,20 @@ function onTypeOfHouseChange () {
   pristine.validate(validateMinPrice);
 }
 
-function getTimeCheckIn () {
+function setTimeCheckIn () {
   checkInTime.value = timeCheck[checkOutTime.value];
 }
 
-function getTimeCheckOut () {
+function setTimeCheckOut () {
   checkOutTime.value = timeCheck[checkInTime.value];
 }
 
-form
-  .querySelectorAll('[name="rooms"]')
-  .forEach((item) => item.addEventListener('change', onRoomChange));
-
-form
-  .querySelectorAll('[name="capacity"]')
-  .forEach((item) => item.addEventListener('change', onRoomChange));
-
-form
-  .querySelectorAll('[name="price"]')
-  .forEach((item) => item.addEventListener('change', onTypeOfHouseChange));
-
-form
-  .querySelectorAll('[name="type"]')
-  .forEach((item) => item.addEventListener('change', onTypeOfHouseChange));
-
-checkOutTime.addEventListener('change', getTimeCheckIn);
-checkInTime.addEventListener('change', getTimeCheckOut);
+roomField.addEventListener('change', onRoomChange);
+capacityField.addEventListener('change', onRoomChange);
+priceField.addEventListener('change', onTypeOfHouseChange);
+houseTypeField.addEventListener('change', onTypeOfHouseChange);
+checkOutTime.addEventListener('change', setTimeCheckIn);
+checkInTime.addEventListener('change', setTimeCheckOut);
 
 sliderElement.noUiSlider.on('slide', () => {
   priceField.value = sliderElement.noUiSlider.get();
@@ -191,7 +179,6 @@ const setUserFormSubmit = (onSuccess) => {
 
 const successMessageTemplate = document.querySelector('#success').content.querySelector('div');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('div');
-const messagePlace = document.querySelector('.ad-form');
 const successMessage = successMessageTemplate.cloneNode(true);
 const errorMessage = errorMessageTemplate.cloneNode(true);
 const tryAgainButton = errorMessage.querySelector('.error__button');
@@ -202,7 +189,7 @@ const resetButton = form.querySelector('.ad-form__reset');
 function onMessageEscKeydown (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    successMessage.remove(messagePlace);
+    successMessage.remove(form);
     document.removeEventListener('keydown', onMessageEscKeydown);
     document.removeEventListener('click', onMessageClickClose);
   }
@@ -210,24 +197,24 @@ function onMessageEscKeydown (evt) {
 
 function onMessageClickClose (evt) {
   evt.preventDefault();
-  successMessage.remove(messagePlace);
+  successMessage.remove(form);
   document.removeEventListener('click', onMessageClickClose);
   document.removeEventListener('keydown', onMessageEscKeydown);
 }
 
 function showSuccessMessage () {
-  messagePlace.append(successMessage);
+  form.append(successMessage);
   document.addEventListener('keydown', onMessageEscKeydown);
   document.addEventListener('click', onMessageClickClose);
 }
 
 function showErrorMessage () {
-  messagePlace.append(errorMessage);
+  form.append(errorMessage);
   tryAgainButton.addEventListener('click', onTryAgainButtonClick);
   unblockSubmitButton();
 }
 function onTryAgainButtonClick () {
-  errorMessage.remove(messagePlace);
+  errorMessage.remove(form);
   tryAgainButton.removeEventListener('click', onTryAgainButtonClick);
 }
 
