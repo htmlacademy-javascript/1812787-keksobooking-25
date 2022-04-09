@@ -1,8 +1,9 @@
-import {createMarker} from './userFormStartPage.js';
 import {showSuccessMessage, showErrorMessage} from './userForm.js';
 import {showAlert} from './util.js';
 
-const getData = () => {
+const filterForm = document.querySelector('.map__filters');
+
+const getData = (onSuccess) => {
   fetch ('https://25.javascript.pages.academy/keksobooking/data')
     .then((response) => {
       if (response.ok) {
@@ -11,7 +12,8 @@ const getData = () => {
       throw new Error();
     })
     .then((points) => {
-      points.forEach((point) => createMarker(point));
+      onSuccess(points);
+      filterForm.classList.remove('ad-form--disabled');
     })
     .catch(() => {
       showAlert('Не удалось получть данные с сервера, попробуйте позже');
