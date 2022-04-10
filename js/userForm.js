@@ -259,7 +259,7 @@ const filterPoint = (point) => {
   let span;
   if (point.offer.price < priceRange.low) {span = 'low'; }
   if (point.offer.price >= priceRange.low && point.offer.price < priceRange.high) {span = 'middle'; }
-  if (point.offer.price >= priceRange.high) {span = 'heigh'; }
+  if (point.offer.price >= priceRange.high) {span = 'high'; }
 
   if (housePriceInput.value !== 'any' && span !== housePriceInput.value) {
     isMatched = false;
@@ -276,16 +276,18 @@ const filterPoint = (point) => {
     return isMatched;
   }
 
-  if  (!('features' in point.offer)) {
-    isMatched = false;
-    return isMatched;
-  } else {
-    houseFeaturesCheck.forEach((houseFeature) => {
-      if (!(point.offer.features.includes(houseFeature.value))) {
-        isMatched = false;
-        return isMatched;
-      }
-    });
+  if (houseFeaturesCheck.length !== 0) {
+    if (!('features' in point.offer)) {
+      isMatched = false;
+      return isMatched;
+    } else {
+      houseFeaturesCheck.forEach((houseFeature) => {
+        if (!(point.offer.features.includes(houseFeature.value))) {
+          isMatched = false;
+          return isMatched;
+        }
+      });
+    }
   }
 
   return isMatched;

@@ -2,9 +2,11 @@ import {showSuccessMessage, showErrorMessage} from './userForm.js';
 import {showAlert} from './util.js';
 
 const filterForm = document.querySelector('.map__filters');
+const GET_DATA_URL = 'https://25.javascript.pages.academy/keksobooking/data';
+const POST_DATA_URL = 'https://25.javascript.pages.academy/keksobooking';
 
 const getData = (onSuccess) => {
-  fetch ('https://25.javascript.pages.academy/keksobooking/data')
+  fetch (GET_DATA_URL)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -22,7 +24,7 @@ const getData = (onSuccess) => {
 
 const sendData = (onSuccess, body) => {
   fetch (
-    'https://25.javascript.pages.academy/keksobooking',
+    POST_DATA_URL,
     {
       method: 'POST',
       body,
