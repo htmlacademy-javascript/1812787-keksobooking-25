@@ -234,4 +234,63 @@ resetButton.addEventListener('click', (evt) => {
   resetPage();
 });
 
-export {setUserFormSubmit, resetPage, showSuccessMessage, showErrorMessage};
+//фильтрация
+
+const priceRange = {
+  low: 10000,
+  high: 50000,
+};
+
+const filterPoint = (point) => {
+
+  const houseTypeInput = document.querySelector('[name="housing-type"]');
+  const housePriceInput = document.querySelector('[name="housing-price"]');
+  const houseRoomInput = document.querySelector('[name="housing-rooms"]');
+  const houseGuestsInput = document.querySelector('[name="housing-guests"]');
+  const houseFeaturesCheck = document.querySelectorAll('.map__features input[type="checkbox"]:checked');
+
+  let isMatched = true;
+
+  if (houseTypeInput.value !== 'any' && point.offer.type !== houseTypeInput.value) {
+    isMatched = false;
+    return isMatched;
+  }
+
+  let span;
+  if (point.offer.price < priceRange.low) {span = 'low'; }
+  if (point.offer.price >= priceRange.low && point.offer.price < priceRange.high) {span = 'middle'; }
+  if (point.offer.price >= priceRange.high) {span = 'high'; }
+
+  if (housePriceInput.value !== 'any' && span !== housePriceInput.value) {
+    isMatched = false;
+    return isMatched;
+  }
+
+  if (houseRoomInput.value !== 'any' && point.offer.rooms !== Number(houseRoomInput.value)) {
+    isMatched = false;
+    return isMatched;
+  }
+
+  if (houseGuestsInput.value !== 'any' && point.offer.guests !== Number(houseGuestsInput.value)) {
+    isMatched = false;
+    return isMatched;
+  }
+
+  if (houseFeaturesCheck.length !== 0) {
+    if (!('features' in point.offer)) {
+      isMatched = false;
+      return isMatched;
+    } else {
+      houseFeaturesCheck.forEach((houseFeature) => {
+        if (!(point.offer.features.includes(houseFeature.value))) {
+          isMatched = false;
+          return isMatched;
+        }
+      });
+    }
+  }
+
+  return isMatched;
+};
+
+export {setUserFormSubmit, resetPage, showSuccessMessage, showErrorMessage, filterPoint};
