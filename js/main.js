@@ -3,6 +3,7 @@ import './userFormStartPage.js';
 import {getData} from './load.js';
 import {rendererSimilarList, setFeaturesChange, setGuestsChange, setPriceChange, setRoomChange, setTypeChange} from './userFormStartPage.js';
 import {debounce} from './util.js';
+import './photo.js';
 
 const RERENDER_DELAY = 500;
 
