@@ -1,4 +1,4 @@
-import {createPopupElement} from './generateData.js';
+import {createPopupElement} from './popup.js';
 import {filterPoint} from './userForm.js';
 
 const MARKER_COUNT = 10;
@@ -8,6 +8,12 @@ const allElements = form.querySelectorAll('fieldset');
 const filterElements = filterForm.querySelectorAll('.map__filter');
 const mapFeatures = filterForm.querySelector('.map__features');
 const addressField = document.querySelector('[name="address"]');
+const houseTypeInput = document.querySelector('[name="housing-type"]');
+const housePriceInput = document.querySelector('[name="housing-price"]');
+const houseRoomInput = document.querySelector('[name="housing-rooms"]');
+const houseGuestsInput = document.querySelector('[name="housing-guests"]');
+const houseFeatures = document.querySelectorAll('.map__features');
+
 const defaultCoordinates = {
   lat: 35.65283,
   lng: 139.83948,
@@ -104,21 +110,14 @@ mainMarker.on('moveend', (evt) => {
   addressField.value = `${markerCoordinates.lat.toFixed(5)}, ${markerCoordinates.lng.toFixed(5)}`;
 });
 
-const rendererSimilarList = (similarPoints) => {
+const renderSimilarList = (similarPoints) => {
   clearMap();
   similarPoints
     .slice()
     .filter(filterPoint)
-  //    .sort(comparePoints)
     .slice(0, MARKER_COUNT)
     .forEach((point) => createMarker(point));
 };
-
-const houseTypeInput = document.querySelector('[name="housing-type"]');
-const housePriceInput = document.querySelector('[name="housing-price"]');
-const houseRoomInput = document.querySelector('[name="housing-rooms"]');
-const houseGuestsInput = document.querySelector('[name="housing-guests"]');
-const houseFeatures = document.querySelectorAll('.map__features');
 
 const setTypeChange = (cb) => {
   houseTypeInput.addEventListener('change', () => {
@@ -150,4 +149,4 @@ const setFeaturesChange = (cb) => {
   }));
 };
 
-export {createMarker, setMainMarker, setTypeChange, setPriceChange, setRoomChange, setGuestsChange, setFeaturesChange, rendererSimilarList};
+export {createMarker, setMainMarker, setTypeChange, setPriceChange, setRoomChange, setGuestsChange, setFeaturesChange, renderSimilarList};

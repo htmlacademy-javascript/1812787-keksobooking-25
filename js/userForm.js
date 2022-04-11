@@ -1,16 +1,8 @@
 import {sendData} from './load.js';
 import {isEscapeKey} from './util.js';
-import {setMainMarker} from './userFormStartPage.js';
+import {renderSimilarList, setMainMarker} from './userFormStartPage.js';
 
 const form = document.querySelector('.ad-form');
-
-const pristine = new Pristine(form, {
-  classTo: 'ad-form__element',
-  errorClass: 'ad-form__item--invalid',
-  errorTextParent: 'ad-form__element',
-  errorTextClass: 'ad-form__error-text',
-});
-
 const sliderElement = document.querySelector('.ad-form__slider');
 const submitButton = form.querySelector('.ad-form__submit');
 const roomField = form.querySelector('[name="rooms"]');
@@ -19,6 +11,13 @@ const priceField = form.querySelector('[name="price"]');
 const houseTypeField = form.querySelector('[name="type"]');
 const checkInTime = form.querySelector('[name="timein"]');
 const checkOutTime = form.querySelector('[name="timeout"]');
+const successMessageTemplate = document.querySelector('#success').content.querySelector('div');
+const errorMessageTemplate = document.querySelector('#error').content.querySelector('div');
+const successMessage = successMessageTemplate.cloneNode(true);
+const errorMessage = errorMessageTemplate.cloneNode(true);
+const tryAgainButton = errorMessage.querySelector('.error__button');
+const resetButton = form.querySelector('.ad-form__reset');
+const defaultPriceValue = priceField.getAttribute('placeholder');
 
 const capacityOptions = {
   '1': ['1'],
@@ -26,7 +25,6 @@ const capacityOptions = {
   '3': ['3', '2', '1'],
   '100': ['0'],
 };
-const defaultPriceValue = priceField.getAttribute('placeholder');
 
 const minPriceOfHouseType = {
   'bungalow': 0,
@@ -42,12 +40,24 @@ const timeCheck = {
   '14:00': '14:00',
 };
 
+const priceRange = {
+  low: 10000,
+  high: 50000,
+};
+
+const pristine = new Pristine(form, {
+  classTo: 'ad-form__element',
+  errorClass: 'ad-form__item--invalid',
+  errorTextParent: 'ad-form__element',
+  errorTextClass: 'ad-form__error-text',
+});
+
 noUiSlider.create(sliderElement, {
   range: {
     min: 0,
     max: 100000,
   },
-  start: 5000,
+  start: 1000,
   step: 1,
   connect: 'lower',
   format: {
@@ -113,6 +123,7 @@ function onRoomChange () {
 }
 
 function onTypeOfHouseChange () {
+  priceField.placeholder = minPriceOfHouseType[houseTypeField.value];
   pristine.validate(validateMinPrice);
 }
 
@@ -177,13 +188,6 @@ const setUserFormSubmit = (onSuccess) => {
   });
 };
 
-const successMessageTemplate = document.querySelector('#success').content.querySelector('div');
-const errorMessageTemplate = document.querySelector('#error').content.querySelector('div');
-const successMessage = successMessageTemplate.cloneNode(true);
-const errorMessage = errorMessageTemplate.cloneNode(true);
-const tryAgainButton = errorMessage.querySelector('.error__button');
-const resetButton = form.querySelector('.ad-form__reset');
-
 //сообщения об отправке формы
 
 function onMessageEscKeydown (evt) {
@@ -208,11 +212,30 @@ function showSuccessMessage () {
   document.addEventListener('click', onMessageClickClose);
 }
 
+function onMessageEscKeydownError (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    errorMessage.remove(form);
+    document.removeEventListener('keydown', onMessageEscKeydownError);
+    document.removeEventListener('click', onMessageClickCloseError);
+  }
+}
+
+function onMessageClickCloseError (evt) {
+  evt.preventDefault();
+  errorMessage.remove(form);
+  document.removeEventListener('click', onMessageClickCloseError);
+  document.removeEventListener('keydown', onMessageEscKeydownError);
+}
+
 function showErrorMessage () {
   form.append(errorMessage);
   tryAgainButton.addEventListener('click', onTryAgainButtonClick);
+  document.addEventListener('keydown', onMessageEscKeydownError);
+  document.addEventListener('click', onMessageClickCloseError);
   unblockSubmitButton();
 }
+
 function onTryAgainButtonClick () {
   errorMessage.remove(form);
   tryAgainButton.removeEventListener('click', onTryAgainButtonClick);
@@ -220,12 +243,18 @@ function onTryAgainButtonClick () {
 
 //очистка формы
 
-const resetPage = () => {
-  document.querySelector('.map__filters').reset();
+const resetPage = (points) => {
   document.querySelector('.ad-form').reset();
+  document.querySelector('.map__filters').reset();
+  document.getElementById('header__preview').src = 'img/muffin-grey.svg';
+  document.getElementById('photo_priview').src = '';
+  renderSimilarList(points);
   const leafleatPopup = document.querySelector('.leaflet-popup');
-  if (leafleatPopup) {leafleatPopup.remove();}
+  if (leafleatPopup) {
+    leafleatPopup.remove();
+  }
   setMainMarker();
+  priceField.placeholder = minPriceOfHouseType[houseTypeField.value];
   setDefaultNoUiSlider();
 };
 
@@ -234,12 +263,14 @@ resetButton.addEventListener('click', (evt) => {
   resetPage();
 });
 
-//фильтрация
-
-const priceRange = {
-  low: 10000,
-  high: 50000,
+const setResetPage = (cb) => {
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    cb();
+  });
 };
+
+//фильтрация
 
 const filterPoint = (point) => {
 
@@ -257,9 +288,15 @@ const filterPoint = (point) => {
   }
 
   let span;
-  if (point.offer.price < priceRange.low) {span = 'low'; }
-  if (point.offer.price >= priceRange.low && point.offer.price < priceRange.high) {span = 'middle'; }
-  if (point.offer.price >= priceRange.high) {span = 'high'; }
+  if (point.offer.price < priceRange.low) {
+    span = 'low';
+  }
+  if (point.offer.price >= priceRange.low && point.offer.price < priceRange.high) {
+    span = 'middle';
+  }
+  if (point.offer.price >= priceRange.high) {
+    span = 'high';
+  }
 
   if (housePriceInput.value !== 'any' && span !== housePriceInput.value) {
     isMatched = false;
@@ -293,4 +330,4 @@ const filterPoint = (point) => {
   return isMatched;
 };
 
-export {setUserFormSubmit, resetPage, showSuccessMessage, showErrorMessage, filterPoint};
+export {setUserFormSubmit, resetPage, showSuccessMessage, showErrorMessage, filterPoint, setResetPage};
