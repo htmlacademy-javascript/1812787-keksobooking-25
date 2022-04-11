@@ -44,7 +44,9 @@ const createPopupElement = ({author, offer}) => {
   offerElement.querySelector('.popup__text--address').textContent = offer.address;
   offerElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
   offerElement.querySelector('.popup__type').textContent = objectTypes[offer.type];
-  offerElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
+  const guestsDecl = offer.guests === 1 ? 'гостя' : 'гостей';
+  const roomsDecl = offer.rooms === 1 ? 'комната' : 'комнаты';
+  offerElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} ${roomsDecl} для ${offer.guests} ${guestsDecl}`;
   offerElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
   if ('features' in offer) {
     getFeatures(offerElement, offer.features);
