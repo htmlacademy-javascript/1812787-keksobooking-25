@@ -61,30 +61,20 @@ noUiSlider.create(sliderElement, {
   step: 1,
   connect: 'lower',
   format: {
-    to: function (value) {
-      return parseInt(value, 10);
-    },
-    from: function (value) {
-      return parseInt(value, 10);
-    }
+    to: (value) => parseInt(value, 10),
+    from: (value) => parseInt(value, 10),
   },
 });
 
 //валидация
 
-function validateMinPrice () {
-  return priceField.value >= minPriceOfHouseType[houseTypeField.value];
-}
+const validateMinPrice = () => priceField.value >= minPriceOfHouseType[houseTypeField.value];
 
-function getTypeOfHouseErrorMessage () {
-  return `Минимальная стоимость выбранного типа жилья ${minPriceOfHouseType[houseTypeField.value]}`;
-}
+const getTypeOfHouseErrorMessage = () => `Минимальная стоимость выбранного типа жилья ${minPriceOfHouseType[houseTypeField.value]}`;
 
-function validateCapacity () {
-  return capacityOptions[roomField.value].includes(capacityField.value);
-}
+const validateCapacity = () => capacityOptions[roomField.value].includes(capacityField.value);
 
-function getRoomErrorMessage () {
+const getRoomErrorMessage = () => {
   if (capacityField.value === '1') {
     return `
   Вариант не доступен для ${capacityField.value} гостя
@@ -99,9 +89,9 @@ function getRoomErrorMessage () {
     Вариант не доступен не для гостей
     `;
   }
-}
+};
 
-function getCapacityErrorMessage () {
+const getCapacityErrorMessage = () => {
   if (capacityField.value === '0') {
     return 'Доступно только для гостей';
   }
@@ -112,28 +102,28 @@ function getCapacityErrorMessage () {
     ${roomField.value}
     ${roomField.value === '1' ? 'комната' : 'комнаты'}
   `;
-}
+};
 
 pristine.addValidator(roomField, validateCapacity, getRoomErrorMessage);
 pristine.addValidator(capacityField, validateCapacity, getCapacityErrorMessage);
 pristine.addValidator(priceField, validateMinPrice, getTypeOfHouseErrorMessage);
 
-function onRoomChange () {
+const onRoomChange = () => {
   pristine.validate(validateCapacity);
-}
+};
 
-function onTypeOfHouseChange () {
+const onTypeOfHouseChange = () => {
   priceField.placeholder = minPriceOfHouseType[houseTypeField.value];
   pristine.validate(validateMinPrice);
-}
+};
 
-function setTimeCheckIn () {
+const setTimeCheckIn = () => {
   checkInTime.value = timeCheck[checkOutTime.value];
-}
+};
 
-function setTimeCheckOut () {
+const setTimeCheckOut = () => {
   checkOutTime.value = timeCheck[checkInTime.value];
-}
+};
 
 roomField.addEventListener('change', onRoomChange);
 capacityField.addEventListener('change', onRoomChange);
@@ -206,11 +196,11 @@ function onMessageClickClose (evt) {
   document.removeEventListener('keydown', onMessageEscKeydown);
 }
 
-function showSuccessMessage () {
+const showSuccessMessage = () => {
   form.append(successMessage);
   document.addEventListener('keydown', onMessageEscKeydown);
   document.addEventListener('click', onMessageClickClose);
-}
+};
 
 function onMessageEscKeydownError (evt) {
   if (isEscapeKey(evt)) {
@@ -228,13 +218,13 @@ function onMessageClickCloseError (evt) {
   document.removeEventListener('keydown', onMessageEscKeydownError);
 }
 
-function showErrorMessage () {
+const showErrorMessage = () => {
   form.append(errorMessage);
   tryAgainButton.addEventListener('click', onTryAgainButtonClick);
   document.addEventListener('keydown', onMessageEscKeydownError);
   document.addEventListener('click', onMessageClickCloseError);
   unblockSubmitButton();
-}
+};
 
 function onTryAgainButtonClick () {
   errorMessage.remove(form);
