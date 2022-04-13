@@ -3,7 +3,6 @@ const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const avatarChooser = document.getElementById('avatar');
 const avatarPreview = document.getElementById('header__preview');
 const housePhotoChooser = document.getElementById('images');
-const housePhotoPreview = document.getElementById('photo_priview');
 
 avatarChooser.addEventListener('change', () => {
   const fileAvatar = avatarChooser.files[0];
@@ -23,6 +22,14 @@ housePhotoChooser.addEventListener('change', () => {
   const matches = FILE_TYPES.some((it) => filePhotoName.endsWith(it));
 
   if (matches) {
-    housePhotoPreview.src = URL.createObjectURL(filePhoto);
+    let photoPreview = document.getElementById('photo_preview');
+    if (!(photoPreview)) {
+      photoPreview = document.createElement('img');
+    }
+    photoPreview.setAttribute('src', URL.createObjectURL(filePhoto));
+    photoPreview.setAttribute('id', 'photo_preview');
+    photoPreview.setAttribute('height', '100%');
+    photoPreview.setAttribute('width', '100%');
+    document.querySelector('.ad-form__photo').appendChild(photoPreview);
   }
 });
