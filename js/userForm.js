@@ -237,7 +237,10 @@ const resetPage = (points) => {
   document.querySelector('.ad-form').reset();
   document.querySelector('.map__filters').reset();
   document.getElementById('header__preview').src = 'img/muffin-grey.svg';
-  document.getElementById('photo_priview').src = '';
+  const photoPreview = document.getElementById('photo_preview');
+  if (photoPreview) {
+    photoPreview.parentNode.removeChild(photoPreview);
+  }
   renderSimilarList(points);
   const leafleatPopup = document.querySelector('.leaflet-popup');
   if (leafleatPopup) {
@@ -247,11 +250,6 @@ const resetPage = (points) => {
   priceField.placeholder = minPriceOfHouseType[houseTypeField.value];
   setDefaultNoUiSlider();
 };
-
-resetButton.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  resetPage();
-});
 
 const setResetPage = (cb) => {
   resetButton.addEventListener('click', (evt) => {
